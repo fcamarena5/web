@@ -1,0 +1,82 @@
+.theme-light {
+  --color-background: white;
+  --color-sidebar: #212529;
+  --color-card-header: #212529;
+  --color-title: black;
+}
+
+.theme-dark {
+  --color-background: #5A595F  ;
+  --color-sidebar: #212529;
+  --color-card-header: #212529;
+  --color-title: white;
+}
+
+body {
+  background-color: var(--color-background);
+}
+
+h1 {
+  color: var(--color-title);
+  text-align: center;
+}
+
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  border-radius: 25px;
+}
+
+.card-header {
+  color: white;
+  background-color: var(--color-card-header);
+}
+
+.card-header > .btn {
+  color: white;
+}
+
+.card-body {
+  border-radius: 25px;
+}
+
+.sb-sidenav-menu {
+  background-color: var(--color-sidebar);
+}
+
+.sb-topnav {
+  color: var(--color-sidebar);
+}
+
+.pt-3-half {
+  padding-top: 1.4rem;
+}
+
+.card-block {padding: 0;}
+.card-body {padding: 0;}
+.card {padding: 0;}
+
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.4);
+  border-radius: 25px;
+}
+
+.collapsing {
+  -webkit-transition-delay: 2s;
+  transition-delay: 0s;
+}
+
+.rotate {
+  transform: rotate(180deg);
+}
+
+@media (max-width: 800px) {
+  #link_prices {
+    display: none;
+  }
+  #link_agenda {
+    display: none;
+  }
+  #link_shipping {
+    display: none;
+  }
+}

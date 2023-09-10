@@ -1,0 +1,13 @@
+{% extends "base_template.html" %}
+{% load static %}
+
+{% block a_sidebar_statistics %}text-white{% endblock %}
+{% block i_sidebar_statistics %}fa-flip{% endblock %}
+
+{% block page_content %}
+<h5 class="mt-4">{{ mac }}</h5>
+<video controls width="400" height="400">
+    <source src="{% static 'thermal_video.avi' %}" type="video/avi">
+    Tu navegador no admite la reproducción de videos.
+</video>
+{% endblock %}

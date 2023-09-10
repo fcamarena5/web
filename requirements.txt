@@ -1,0 +1,7 @@
+Django==4.0.4
+mysqlclient==2.1.0
+mysql-connector-python==8.0.28
+djangorestframework
+plotly
+requests
+opencv-python

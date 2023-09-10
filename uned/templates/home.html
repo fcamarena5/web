@@ -1,0 +1,119 @@
+{% extends "base_template.html" %}
+{% load static %}
+
+{% block a_sidebar_statistics %}text-white{% endblock %}
+{% block i_sidebar_statistics %}fa-flip{% endblock %}
+
+{% block page_content %}
+<h5 class="mt-4"></h5>
+<div class="card mb-4" name="devicesCard">
+    <div class="card-header">
+        <i class="fa-brands fa-unsplash"></i>
+        Devices
+        <button class="btn" type="button" name="button_toggle_devices" data-bs-toggle="collapse" data-bs-target="#devicesCardToggle" aria-expanded="false" aria-controls="devicesCardToggle"><i class="fa-solid fa-arrow-down-wide-short fa-beat" id="button_toggle_devices"></i></button>
+    </div>
+    <div class="card-body" id="devicesCardToggle">
+        <div class="row p-4">
+            {% for device in devices %}
+            <div class="card mx-4 border-0" style="border-radius: 0%; width: 25%;">
+                <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
+                    <img src="https://media.naylampmechatronics.com/1510-superlarge_default/nodemcu-32-30-pin-esp32-wifi.jpg" class="img-fluid" style="background-color: #d7e5ef;">
+                </div>
+                <div class="card-body p-4">
+                    <form action="{% url 'uned:home' %}" method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col">
+                            <h5 class="card-title text-center">Name: </h5>
+                        </div>
+                        <div class="col">
+                            <p class="card-title text-center">{{ device.0.name }}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <h5 class="card-title text-center">MAC: </h5>
+                        </div>
+                        <div class="col">
+                            <input class="card-title text-center" id="mac" name="mac" placeholder="{{ device.0.mac }}" value="{{ device.0.mac }}" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <h5 class="card-title text-center">Last conn.: </h5>
+                        </div>
+                        <div class="col">
+                            <p class="card-title text-center">{{ device.1.time }}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <h5 class="card-title text-center">Temperature: </h5>
+                        </div>
+                        <div class="col">
+                            <p class="card-title text-center">{{ device.1.temperature }}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <h5 class="card-title text-center">Light: </h5>
+                        </div>
+                        <div class="col">
+                            <p class="card-title text-center">{{ device.1.light }}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <h5 class="card-title text-center">Servo 1: </h5>
+                        <input type="range" class="form-range" id="servo1" name="servo1" min="1" max="180" step="1">
+                        <output for="servo1" onforminput="value = servo1.valueAsNumber;" style="color: #d7e5ef; background: black; width: 40%; border-radius: 20px;"></output>
+                    </div>
+                    <div class="row">
+                        <h5 class="card-title text-center">Servo 2: </h5>
+                        <input type="range" class="form-range" id="servo2"name="servo2" min="1" max="180" step="1">
+                        <output for="servo2" onforminput="value = servo2.valueAsNumber;" style="color: #d7e5ef; background: black; width: 40%; border-radius: 20px;"></output>
+                    </div><br>
+                    <div class="row" style="align-items: center; justify-content: center;">
+                        <button type="submit" id="button_actuators" name="button_actuators" class="btn btn-outline-primary" style="width: 80%;">Update data</button><br><br><br>
+                        <button type="submit" id="button_graph" name="button_graph" class="btn btn-outline-success" style="width: 80%;">See graph</button>
+                    </div>
+                </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div class="card mb-4" name="graph">
+    <div class="card-header">
+        <i class="fa-solid fa-chart-line"></i>
+        Graph
+        <button class="btn" type="button" name="button_toggle_graph" data-bs-toggle="collapse" data-bs-target="#graphCardToggle" aria-expanded="false" aria-controls="graphCardToggle"><i class="fa-solid fa-arrow-down-wide-short fa-beat" id="button_toggle_graph"></i></button>
+    </div>
+    <div class="card-body collapse" id="graphCardToggle">
+        <h2>MAC: {{ selected_device }}</h2>
+        <h4>Temperature chart</h4>
+        <div id="temperatureChart">
+            <script>
+                var temperatureChartJson = '{{ temperature_chart_json|safe }}';
+                var temperatureChart = document.getElementById('temperatureChart');
+                Plotly.newPlot(temperatureChart, JSON.parse(temperatureChartJson));
+            </script>
+        </div><br><br>
+        <h4>Light chart</h4>
+        <div id="lightChart"></div>
+            <script>
+                var lightChartJson = '{{ light_chart_json|safe }}';
+                var lightChart = document.getElementById('lightChart');
+                Plotly.plot(lightChart, JSON.parse(lightChartJson));
+            </script>
+        </div><br><br>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/range_input.js' %}"></script>
+{% endblock %}

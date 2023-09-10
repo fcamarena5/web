@@ -1,0 +1,126 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, ">
+        <link rel="icon" href="{% static 'img/iconcleanair.ico' %}">
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>{{ title }}</title>
+        <!-- Bootstrap -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+        <!-- Select dropdowns -->
+        {% block scripts_dropdowns %}{% endblock %}
+        <!-- CSS and icons -->
+        <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/common_styles.css' %}">
+        <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+        <!-- Plotly -->
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    </head>
+
+    <!-- Top Navbar-->
+    <body class="sb-nav-fixed">
+        <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+            <!-- Navbar Brand-->
+            <a class="navbar-brand ps-3"><img class="Logo" src="{% static 'img/logo.jpg' %}" alt="Logo" height="50" width="50"></a>
+            <!-- Sidebar Toggle -->
+            <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+            <!-- _Navbar Dropdown-->
+            <ul class="navbar-nav form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-user" style="color: white;"></i></a>
+                    <ul class="dropdown-menu dropdown-menu-end pull-right" aria-labelledby="navbarDropdown">
+                        <li><button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal_change_password"><i class="fa-solid fa-key fa-bounce"></i> Change password</button></li>
+                        <li><a class="dropdown-item" href="{% url 'uned:logout' %}"><i class="fa-solid fa-door-open fa-bounce"></i>  Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Sidebar -->
+        <div id="layoutSidenav">
+            <div id="layoutSidenav_nav">
+                <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                    <div class="sb-sidenav-menu">
+                        <div class="nav">
+                            <div class="sb-sidenav-menu-heading">Home</div>
+                            <a class="nav-link text-white" href="{% url 'uned:home' %}">
+                                <div class="sb-nav-link-icon">
+                                    <i class="fa-solid fa-house-chimney fa-lg" style="color: white;"></i>
+                                </div>
+                                Home
+                            </a>
+                            <div class="sb-sidenav-menu-heading">Thermal data</div>
+                            {% for device in devices %}
+                            <a class="nav-link {% block a_sidebar_search %}{% endblock %}" href="{% url 'uned:thermal' device.0.mac %}">
+                                <div class="sb-nav-link-icon">
+                                    <i class="fa-solid fa-video fa-lg {% block i_sidebar_search %}{% endblock %}" style="color: white;"></i>
+                                </div>
+                                {{ device.0.mac }}
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="sb-sidenav-footer">
+                        <div class="small">Logged in as:</div>{{user.username}}
+                    </div>
+                </nav>
+            </div>
+
+            <!-- Main content -->
+            <div id="layoutSidenav_content">
+                <main>
+                    <div class="container-fluid px-4">
+                        <div class="card-deck">
+                            {% block page_content %}{% endblock %}
+                        </div>
+                    </div>
+                </main>
+            </div>
+            
+        <!-- Modal Change password -->
+        <div class="modal fade" name="modal_change_password" id="modal_change_password" tabindex="-1" aria-labelledby="modal_change_password" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-tittle" id="label_modal_change_password">Change your password</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <label for="new_password_1" class="form-label">New password</label>
+                        <input type="password" name="new_password_1" id="new_password_1" class="form-control" required>
+                        <label for="new_password_2" class="form-label">Repeat the password</label>
+                        <input type="password" name="new_password_2" id="new_password_2" class="form-control" required>
+                        <label for="old_password" class="form-label">Old password</label>
+                        <input type="password" name="old_password" id="old_password" class="form-control" required>
+                        {% if changed_password is not None %}
+                            <script src="{% static 'js/open_modal.js' %}"></script>
+                            {% if changed_password %}
+                            <div class='alert alert-success' role='alert'><i class='fa-solid fa-circle-check'></i>Password has been successfully changed!<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>
+                            {% elif not changed_password %}
+                            <div class='alert alert-danger' role='alert'><i class='fa-solid fa-triangle-exclamation'></i>Passwords do not match!<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button name="button_change_password" id="button_change_password" class="btn btn-primary" onclick="changePassword()">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script src="{% static 'js/scripts.js' %}"></script>
+        <script src="{% static 'js/change_password.js' %}"></script>
+        <script src="{% static 'js/spinner.js' %}"></script>
+        <script src="{% static 'js/toggle_theme.js' %}"></script>
+        <script src="{% static 'js/toggle_card_guest.js' %}"></script>
+
+        {% block scripts %}{% endblock %}
+    </body>
+</html>
