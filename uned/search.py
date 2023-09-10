@@ -34,6 +34,6 @@ class SelectQueryDB:
         return temperature_chart_json, light_chart_json
     
     def get_thermal_data(self, mac):
-        pixels = DataThermal.objects.filter(mac=mac).order_by('time')
-        return pixels
+        data = DataThermal.objects.filter(mac=mac).order_by('-time')
+        return data
         

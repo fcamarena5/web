@@ -4,4 +4,4 @@ mysql-connector-python==8.0.28
 djangorestframework
 plotly
 requests
-opencv-python
+opencv-python-headless
