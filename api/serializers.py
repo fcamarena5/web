@@ -16,10 +16,10 @@ class DeviceSerializer(serializers.ModelSerializer):
 class DataSerializer(serializers.ModelSerializer):
     class Meta:
         model = Data
-        fields = ['code', 'mac', 'ip', 'time', 'angle_servo1', 'angle_servo2', 'temperature', 'light']
+        fields = ['code', 'mac', 'time', 'angle_servo1', 'angle_servo2', 'temperature', 'light']
 
 class DataThermalSerializer(serializers.ModelSerializer):
     class Meta:
         model = DataThermal
-        fields = ['code', 'mac', 'ip', 'time', 'pixels']
+        fields = ['code', 'mac', 'time', 'pixels']
 

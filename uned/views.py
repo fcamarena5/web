@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from .search import SelectQueryDB
 from .communicate import send_message
-from .video import generate_video
+from .video import generate_video, detect_fire_or_person
 
 
 # Redirects to Login page if user is not authenticated or to Main page if authenticated.
@@ -92,11 +92,14 @@ def thermal(request, mac):
     data = SelectQueryDB(request).get_data()
     thermal_data = SelectQueryDB(request).get_thermal_data(mac)
     generate_video(thermal_data)
+    list_fire, list_person = detect_fire_or_person(thermal_data)
     context = {
         'title': 'Thermal' + mac,
         'thermal_data': thermal_data,
         'devices': data,
-        'mac': mac
+        'mac': mac,
+        'detected_fire': list_fire,
+        'detected_person': list_person
     }
     return render(request, 'thermal.html', context)
 
